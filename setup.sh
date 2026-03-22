@@ -22,7 +22,7 @@ for cmd in git python3; do
 done
 
 # ── 2. 选择安装目录 ──
-INSTALL_DIR="${AC_DIR:-$HOME/agents_company_for_happycapy}}"
+INSTALL_DIR="${AC_DIR:-$HOME/agents_company_for_happycapy}"
 
 if [ -d "$INSTALL_DIR/.git" ]; then
   echo -e "${YELLOW}Existing installation found at $INSTALL_DIR${NC}"
