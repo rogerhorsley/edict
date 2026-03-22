@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { api, type OpenClawDetectResult, type OpenClawInstallation, type ChannelsResult, type ChannelInfo } from '../api';
 
@@ -433,9 +433,11 @@ function AccountSection() {
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginName, setLoginName] = useState('');
-  const [hcToken, setHcToken] = useState('');
-  const [loginMode, setLoginMode] = useState<'happycapy' | 'email'>('happycapy');
+  const [loginPassword, setLoginPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
+  const [authConfig, setAuthConfig] = useState<{ google_client_id: string; has_env_login: boolean } | null>(null);
+  const [googleLoaded, setGoogleLoaded] = useState(false);
+  const googleBtnRef = useRef<HTMLDivElement>(null);
 
   // API Key form
   const [apiProvider, setApiProvider] = useState('anthropic');
@@ -444,19 +446,98 @@ function AccountSection() {
   const [preferredModel, setPreferredModel] = useState('');
   const [savingKey, setSavingKey] = useState(false);
 
+  // Load auth config and attempt env auto-login
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      // Load auth config
+      try {
+        const cfg = await api.authConfig();
+        if (!cancelled && cfg.ok) setAuthConfig(cfg);
+      } catch { /* ignore */ }
+
+      // Attempt HappyCapy env auto-login if not authenticated
+      if (!isAuthenticated) {
+        try {
+          const r = await api.authEnvLogin();
+          if (!cancelled && r.ok && r.token) {
+            await login(r.token);
+          }
+        } catch { /* not in HappyCapy env */ }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Load Google Identity Services script
+  useEffect(() => {
+    const gcid = authConfig?.google_client_id;
+    if (!gcid || isAuthenticated) return;
+    if (document.getElementById('google-gsi-script')) {
+      setGoogleLoaded(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'google-gsi-script';
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleLoaded(true);
+    document.body.appendChild(script);
+  }, [authConfig?.google_client_id, isAuthenticated]);
+
+  // Render Google Sign-In button
+  useEffect(() => {
+    const gcid = authConfig?.google_client_id;
+    if (!gcid || !googleLoaded || !window.google || isAuthenticated || !googleBtnRef.current) return;
+
+    window.google.accounts.id.initialize({
+      client_id: gcid,
+      callback: async (response) => {
+        setLoggingIn(true);
+        try {
+          const r = await api.authGoogle(response.credential);
+          if (r.ok && r.token) {
+            await login(r.token);
+            toast('Logged in with Google', 'ok');
+          } else {
+            toast(r.error || 'Google login failed', 'err');
+          }
+        } catch {
+          toast('Google login failed', 'err');
+        } finally {
+          setLoggingIn(false);
+        }
+      },
+    });
+
+    window.google.accounts.id.renderButton(googleBtnRef.current, {
+      type: 'standard',
+      size: 'large',
+      theme: 'outline',
+      text: 'signin_with',
+      width: 280,
+    });
+  }, [googleLoaded, isAuthenticated, authConfig?.google_client_id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleLogin = async () => {
+    if (!loginEmail.trim()) {
+      toast('Email is required', 'err');
+      return;
+    }
     setLoggingIn(true);
     try {
-      const payload = loginMode === 'happycapy'
-        ? { happycapy_token: hcToken }
-        : { email: loginEmail, name: loginName };
-      const r = await api.authLogin(payload);
+      const r = await api.authLogin({
+        email: loginEmail,
+        name: loginName || undefined,
+        password: loginPassword || undefined,
+      });
       if (r.ok && r.token) {
         await login(r.token);
         toast('Login success', 'ok');
-        setHcToken('');
         setLoginEmail('');
         setLoginName('');
+        setLoginPassword('');
       } else {
         toast(r.error || 'Login failed', 'err');
       }
@@ -497,7 +578,7 @@ function AccountSection() {
 
   return (
     <div className="setup-section">
-      <div className="sec-title">Account / HappyCapy Login</div>
+      <div className="sec-title">Account / Login</div>
 
       {isAuthenticated && user ? (
         <div className="setup-card">
@@ -507,7 +588,8 @@ function AccountSection() {
           </div>
           <div style={{ fontSize: 12, color: 'var(--muted)', margin: '4px 0' }}>
             {user.email}
-            {user.happycapy_id && ` | HappyCapy: ${user.happycapy_id.substring(0, 8)}...`}
+            {user.happycapy_id && ` | HappyCapy`}
+            {user.google_id && ` | Google`}
           </div>
           <div style={{ fontSize: 11, color: 'var(--muted)' }}>
             Last login: {user.last_login || 'N/A'}
@@ -548,33 +630,34 @@ function AccountSection() {
         </div>
       ) : (
         <div className="setup-card">
-          <div style={{ marginBottom: 8 }}>
-            <label style={{ fontSize: 12, marginRight: 12 }}>
-              <input type="radio" checked={loginMode === 'happycapy'} onChange={() => setLoginMode('happycapy')} /> HappyCapy Token
-            </label>
-            <label style={{ fontSize: 12 }}>
-              <input type="radio" checked={loginMode === 'email'} onChange={() => setLoginMode('email')} /> Email (Dev)
-            </label>
-          </div>
-
-          {loginMode === 'happycapy' ? (
-            <input className="setup-input" type="password" value={hcToken}
-              onChange={(e) => setHcToken(e.target.value)} placeholder="HappyCapy API Token" />
-          ) : (
+          {/* Google Sign-In */}
+          {authConfig?.google_client_id && (
             <>
-              <input className="setup-input" value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)} placeholder="Email" />
-              <input className="setup-input" value={loginName}
-                onChange={(e) => setLoginName(e.target.value)} placeholder="Name (optional)" style={{ marginTop: 4 }} />
+              <div ref={googleBtnRef} style={{ marginBottom: 12 }} />
+              <div style={{ textAlign: 'center', margin: '8px 0', color: 'var(--muted)', fontSize: 12 }}>
+                ──── or login with email ────
+              </div>
             </>
           )}
+
+          {/* Email login */}
+          <input className="setup-input" value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)} placeholder="Email"
+            onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+          <input className="setup-input" type="password" value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
+            placeholder="Password (optional)" style={{ marginTop: 4 }}
+            onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+          <input className="setup-input" value={loginName}
+            onChange={(e) => setLoginName(e.target.value)}
+            placeholder="Name (optional, for new accounts)" style={{ marginTop: 4 }} />
 
           <button className="btn btn-p" style={{ marginTop: 8 }} disabled={loggingIn} onClick={handleLogin}>
             {loggingIn ? 'Logging in...' : 'Login'}
           </button>
 
           <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8 }}>
-            Login to use your personal API keys and model service. The dashboard works without login.
+            Login to use your personal API keys and model preferences. The dashboard works without login.
           </div>
         </div>
       )}

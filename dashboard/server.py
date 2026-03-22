@@ -240,6 +240,23 @@ def _decrypt_api_key(encrypted: str) -> str:
     return bytes(a ^ b for a, b in zip(data, key * (len(data) // 32 + 1))).decode()
 
 
+def _hash_password(password: str) -> str:
+    """Hash password with PBKDF2-HMAC-SHA256."""
+    salt = secrets.token_hex(16)
+    pwd_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 100_000)
+    return f'{salt}:{pwd_hash.hex()}'
+
+
+def _verify_password(password: str, stored: str) -> bool:
+    """Verify password against stored PBKDF2 hash."""
+    try:
+        salt, pwd_hash = stored.split(':', 1)
+        check = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 100_000).hex()
+        return hmac.compare_digest(check, pwd_hash)
+    except Exception:
+        return False
+
+
 def _get_current_user(handler) -> dict | None:
     """Extract and validate JWT from Authorization header."""
     auth_header = handler.headers.get('Authorization', '')
@@ -2443,10 +2460,15 @@ class Handler(BaseHTTPRequestHandler):
         elif p == '/api/auth/me':
             user = _get_current_user(self)
             if user:
-                safe_user = {k: v for k, v in user.items() if k != 'api_key'}
+                safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password')}
                 self.send_json({'ok': True, 'user': safe_user})
             else:
                 self.send_json({'ok': False, 'authenticated': False}, 200)
+
+        elif p == '/api/auth/config':
+            gcid = os.environ.get('GOOGLE_CLIENT_ID', '')
+            has_env = bool(os.environ.get('CAPY_USER_ID', '').strip() and os.environ.get('CAPY_USER_EMAIL', '').strip())
+            self.send_json({'ok': True, 'google_client_id': gcid, 'has_env_login': has_env})
 
         elif p == '/api/auth/models':
             user = _get_current_user(self)
@@ -2967,13 +2989,25 @@ class Handler(BaseHTTPRequestHandler):
                     users_data.setdefault('users', []).append(user)
                 user['last_login'] = now_iso()
             elif email:
+                password = body.get('password', '').strip()
                 user = next((u for u in users_data.get('users', []) if u.get('email') == email), None)
-                if not user:
+                if user:
+                    # Existing user: verify password if one is set
+                    if user.get('password'):
+                        if not password:
+                            self.send_json({'ok': False, 'error': 'Password required'}, 401)
+                            return
+                        if not _verify_password(password, user['password']):
+                            self.send_json({'ok': False, 'error': 'Invalid password'}, 401)
+                            return
+                else:
                     user = {
                         'id': f'usr_{uuid.uuid4().hex[:12]}',
                         'happycapy_id': None,
+                        'google_id': None,
                         'email': email,
                         'name': name or email.split('@')[0],
+                        'password': _hash_password(password) if password else None,
                         'api_key': None,
                         'model_endpoint': None,
                         'preferred_model': None,
@@ -2988,7 +3022,7 @@ class Handler(BaseHTTPRequestHandler):
                 'email': user.get('email', ''),
                 'exp': int(time.time()) + _JWT_EXPIRY_SEC,
             })
-            safe_user = {k: v for k, v in user.items() if k != 'api_key'}
+            safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password')}
             self.send_json({'ok': True, 'token': jwt_token, 'user': safe_user})
 
         elif p == '/api/auth/logout':
@@ -3018,6 +3052,88 @@ class Handler(BaseHTTPRequestHandler):
                     break
             save_users(users_data)
             self.send_json({'ok': True, 'message': 'API 配置已保存'})
+
+        elif p == '/api/auth/env-login':
+            # Auto-login using HappyCapy environment variables
+            capy_uid = os.environ.get('CAPY_USER_ID', '').strip()
+            capy_email = os.environ.get('CAPY_USER_EMAIL', '').strip()
+            capy_name = os.environ.get('CAPY_USER_NAME', '').strip()
+            if not capy_uid or not capy_email:
+                self.send_json({'ok': False, 'error': 'Not in HappyCapy environment'}, 400)
+                return
+            users_data = load_users()
+            user = next((u for u in users_data.get('users', []) if u.get('happycapy_id') == capy_uid), None)
+            if not user:
+                user = {
+                    'id': f'usr_{uuid.uuid4().hex[:12]}',
+                    'happycapy_id': capy_uid,
+                    'google_id': None,
+                    'email': capy_email,
+                    'name': capy_name or capy_email.split('@')[0],
+                    'password': None,
+                    'api_key': None,
+                    'model_endpoint': None,
+                    'preferred_model': None,
+                    'created_at': now_iso(),
+                }
+                users_data.setdefault('users', []).append(user)
+            user['last_login'] = now_iso()
+            save_users(users_data)
+            jwt_token = _jwt_encode({'sub': user['id'], 'email': user.get('email', ''), 'exp': int(time.time()) + _JWT_EXPIRY_SEC})
+            safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password')}
+            self.send_json({'ok': True, 'token': jwt_token, 'user': safe_user})
+
+        elif p == '/api/auth/google':
+            credential = body.get('credential', '').strip()
+            if not credential:
+                self.send_json({'ok': False, 'error': 'credential required'}, 400)
+                return
+            try:
+                import base64 as _b64
+                parts = credential.split('.')
+                if len(parts) != 3:
+                    raise ValueError('Invalid JWT')
+                pad = lambda s: s + '=' * (4 - len(s) % 4) if len(s) % 4 else s
+                payload = json.loads(_b64.urlsafe_b64decode(pad(parts[1])))
+                if payload.get('iss') not in ('accounts.google.com', 'https://accounts.google.com'):
+                    raise ValueError('Invalid issuer')
+                gcid = os.environ.get('GOOGLE_CLIENT_ID', '')
+                if gcid and payload.get('aud') != gcid:
+                    raise ValueError('Invalid audience')
+                g_email = payload.get('email', '')
+                g_name = payload.get('name', g_email.split('@')[0] if g_email else '')
+                g_id = payload.get('sub', '')
+                if not g_email or not g_id:
+                    raise ValueError('Missing email or sub')
+                users_data = load_users()
+                user = next((u for u in users_data.get('users', []) if u.get('google_id') == g_id), None)
+                if not user:
+                    # Also check by email
+                    user = next((u for u in users_data.get('users', []) if u.get('email') == g_email), None)
+                    if user:
+                        user['google_id'] = g_id
+                if not user:
+                    user = {
+                        'id': f'usr_{uuid.uuid4().hex[:12]}',
+                        'happycapy_id': None,
+                        'google_id': g_id,
+                        'email': g_email,
+                        'name': g_name,
+                        'password': None,
+                        'api_key': None,
+                        'model_endpoint': None,
+                        'preferred_model': None,
+                        'created_at': now_iso(),
+                    }
+                    users_data.setdefault('users', []).append(user)
+                user['last_login'] = now_iso()
+                save_users(users_data)
+                jwt_token = _jwt_encode({'sub': user['id'], 'email': user.get('email', ''), 'exp': int(time.time()) + _JWT_EXPIRY_SEC})
+                safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password')}
+                self.send_json({'ok': True, 'token': jwt_token, 'user': safe_user})
+            except Exception as e:
+                log.warning(f'Google auth failed: {e}')
+                self.send_json({'ok': False, 'error': str(e)}, 401)
 
         else:
             self.send_error(404)

@@ -178,8 +178,14 @@ export const api = {
     postJ<ActionResult>(`${API_BASE}/api/channels/set-default`, data),
 
   // ── Auth ──
-  authLogin: (data: { happycapy_token?: string; email?: string; name?: string }) =>
+  authLogin: (data: { email?: string; name?: string; password?: string }) =>
     postJ<AuthLoginResult>(`${API_BASE}/api/auth/login`, data),
+  authEnvLogin: () =>
+    postJ<AuthLoginResult>(`${API_BASE}/api/auth/env-login`, {}),
+  authGoogle: (credential: string) =>
+    postJ<AuthLoginResult>(`${API_BASE}/api/auth/google`, { credential }),
+  authConfig: () =>
+    fetchJ<AuthConfigResult>(`${API_BASE}/api/auth/config`),
   authLogout: () =>
     postJ<ActionResult>(`${API_BASE}/api/auth/logout`, {}),
   authMe: () =>
@@ -624,6 +630,7 @@ export interface AddChannelPayload {
 export interface UserInfo {
   id: string;
   happycapy_id: string | null;
+  google_id: string | null;
   email: string;
   name: string;
   model_endpoint: string | null;
@@ -631,6 +638,12 @@ export interface UserInfo {
   provider?: string;
   created_at: string;
   last_login?: string;
+}
+
+export interface AuthConfigResult {
+  ok: boolean;
+  google_client_id: string;
+  has_env_login: boolean;
 }
 
 export interface AuthLoginResult {

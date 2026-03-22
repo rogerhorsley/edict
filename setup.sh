@@ -51,34 +51,36 @@ else
   exit 1
 fi
 
-# ── 4. 创建快捷命令 ──
+# ── 4. 安装 CLI ──
 BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
 
-# ac-dashboard 启动命令
+# Unified CLI
+cat > "$BIN_DIR/ac" << ACEOF
+#!/usr/bin/env python3
+import os, sys
+os.environ.setdefault('AC_REPO_DIR', '$INSTALL_DIR')
+sys.path.insert(0, '$INSTALL_DIR')
+exec(open('$INSTALL_DIR/cli.py').read())
+ACEOF
+chmod +x "$BIN_DIR/ac"
+
+# Backward-compatible aliases
 cat > "$BIN_DIR/ac-dashboard" << DEOF
 #!/bin/bash
-cd "$INSTALL_DIR"
-echo "Starting 三省七部 Dashboard on http://127.0.0.1:7891"
-python3 dashboard/server.py "\$@"
+exec ac dashboard "\$@"
 DEOF
 chmod +x "$BIN_DIR/ac-dashboard"
 
-# ac-sync 后台同步命令
 cat > "$BIN_DIR/ac-sync" << SEOF
 #!/bin/bash
-cd "$INSTALL_DIR"
-echo "Starting background sync loop..."
-bash scripts/run_loop.sh "\$@"
+exec ac sync "\$@"
 SEOF
 chmod +x "$BIN_DIR/ac-sync"
 
-# ac-update 更新命令
 cat > "$BIN_DIR/ac-update" << UEOF
 #!/bin/bash
-cd "$INSTALL_DIR"
-echo "Updating project..."
-git pull --ff-only origin main && bash install.sh
+exec ac update "\$@"
 UEOF
 chmod +x "$BIN_DIR/ac-update"
 
@@ -87,15 +89,20 @@ echo -e "${GREEN}╔════════════════════
 echo -e "${GREEN}║  Installation complete!                          ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════╝${NC}"
 echo ""
-echo "Quick commands (add ~/.local/bin to PATH if needed):"
-echo "  ac-dashboard     Start the dashboard (port 7891)"
-echo "  ac-sync          Start background data sync"
-echo "  ac-update        Pull latest and reinstall"
+echo "Unified CLI (add ~/.local/bin to PATH if needed):"
+echo ""
+echo "  ac dashboard          Start dashboard (port 7891)"
+echo "  ac sync               Start background data sync"
+echo "  ac update             Pull latest and reinstall"
+echo "  ac task list          List tasks"
+echo "  ac agent status       Show agent status"
+echo "  ac channel list       List channels"
+echo "  ac login              Login to dashboard"
+echo "  ac --help             See all commands"
 echo ""
 echo "Or manually:"
 echo "  cd $INSTALL_DIR"
-echo "  python3 dashboard/server.py          # Start dashboard"
-echo "  bash scripts/run_loop.sh &           # Background sync"
+echo "  python3 dashboard/server.py"
 echo ""
 
 # Check if ~/.local/bin is in PATH

@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store';
+import { api } from '../api';
 
 export default function LoginButton() {
   const user = useStore((s) => s.user);
   const isAuthenticated = useStore((s) => s.isAuthenticated);
   const logout = useStore((s) => s.logout);
+  const login = useStore((s) => s.login);
   const loadUser = useStore((s) => s.loadUser);
   const setActiveTab = useStore((s) => s.setActiveTab);
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+    // First try to restore session from stored token
+    loadUser().then(() => {
+      // If no stored session, try HappyCapy env auto-login
+      const token = api.getToken();
+      if (!token) {
+        api.authEnvLogin().then((r) => {
+          if (r.ok && r.token) login(r.token);
+        }).catch(() => { /* not in HappyCapy env */ });
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isAuthenticated || !user) {
     return (
