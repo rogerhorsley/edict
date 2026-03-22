@@ -1,0 +1,26 @@
+[
+  {
+    "id": "INS-20260322-001",
+    "title": "AI行业竞品动态周报",
+    "summary": "发现3个竞品本周有重大更新：CrewAI发布v0.30，AutoGen新增多模态支持，LangGraph优化了工作流引擎",
+    "source": "scheduled:weekly_competitive_scan",
+    "suggestedAction": "启动竞品深度分析项目",
+    "createdAt": "2026-03-22T08:00:00Z",
+    "status": "pending",
+    "confirmedAt": null,
+    "rejectedAt": null,
+    "taskId": null
+  },
+  {
+    "id": "INS-20260322-002",
+    "title": "新技术趋势：MCP协议生态快速扩张",
+    "summary": "Model Context Protocol在过去一周新增50+官方集成，市场认可度显著提升",
+    "source": "scheduled:tech_trend_monitor",
+    "suggestedAction": "评估MCP集成可行性",
+    "createdAt": "2026-03-22T09:30:00Z",
+    "status": "pending",
+    "confirmedAt": null,
+    "rejectedAt": null,
+    "taskId": null
+  }
+]

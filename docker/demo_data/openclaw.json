@@ -1,0 +1,22 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6"
+      }
+    },
+    "list": [
+      {"id": "strategy", "workspace": "/app/.openclaw/workspace-strategy", "subagents": {"allowAgents": ["review", "execution"]}},
+      {"id": "review", "workspace": "/app/.openclaw/workspace-review", "subagents": {"allowAgents": ["strategy", "execution"]}},
+      {"id": "execution", "workspace": "/app/.openclaw/workspace-execution", "subagents": {"allowAgents": ["strategy", "review", "research", "hr", "finance", "brand", "security", "compliance", "tech"]}},
+      {"id": "research", "workspace": "/app/.openclaw/workspace-research", "subagents": {"allowAgents": ["strategy"]}},
+      {"id": "hr", "workspace": "/app/.openclaw/workspace-hr", "subagents": {"allowAgents": ["execution"]}},
+      {"id": "finance", "workspace": "/app/.openclaw/workspace-finance", "subagents": {"allowAgents": ["execution"]}},
+      {"id": "brand", "workspace": "/app/.openclaw/workspace-brand", "subagents": {"allowAgents": ["execution"]}},
+      {"id": "security", "workspace": "/app/.openclaw/workspace-security", "subagents": {"allowAgents": ["execution"]}},
+      {"id": "compliance", "workspace": "/app/.openclaw/workspace-compliance", "subagents": {"allowAgents": ["execution"]}},
+      {"id": "tech", "workspace": "/app/.openclaw/workspace-tech", "subagents": {"allowAgents": ["execution"]}}
+    ]
+  },
+  "providers": {}
+}

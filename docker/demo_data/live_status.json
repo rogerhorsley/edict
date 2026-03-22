@@ -1,0 +1,697 @@
+{
+  "generatedAt": "2026-02-24 22:13:18",
+  "taskSource": "tasks_source.json",
+  "officials": [
+    {
+      "name": "首席战略官",
+      "org": "策枢",
+      "duty": "起草任务令与优先级"
+    },
+    {
+      "name": "首席审核官",
+      "org": "衡枢",
+      "duty": "审议与退回机制"
+    },
+    {
+      "name": "首席运营官",
+      "org": "行枢",
+      "duty": "派单与升级裁决"
+    },
+    {
+      "name": "人才总监",
+      "org": "人部",
+      "duty": "编制/权限/排班"
+    },
+    {
+      "name": "财务总监",
+      "org": "财部",
+      "duty": "资源/预算/成本"
+    },
+    {
+      "name": "品牌总监",
+      "org": "品部",
+      "duty": "文档/汇报/规范"
+    },
+    {
+      "name": "安全总监",
+      "org": "安部",
+      "duty": "应急与巡检"
+    },
+    {
+      "name": "合规总监",
+      "org": "规部",
+      "duty": "合规/审计/红线"
+    },
+    {
+      "name": "技术总监",
+      "org": "技部",
+      "duty": "工程交付与自动化"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "JJC-20260224-014",
+      "title": "A计划：三省七部 GitHub 爆款项目打造",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Doing",
+      "now": "Week1完成：README升级/Topics/对比表已上线。待决策：①Docker Hub推送授权 ②Demo GIF录制",
+      "eta": "2026-03-24",
+      "block": "衡枢disabled，用户授权直接执行",
+      "output": "",
+      "ac": "GitHub Stars 显著增长，进入 Trending，Hacker News 上榜",
+      "review_round": 0,
+      "flow_log": [
+        {
+          "at": "2026-02-24T14:03:00.543790Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：执行A计划——三省七部 GitHub 爆款项目打造，30天行动计划"
+        },
+        {
+          "at": "2026-02-24T14:04:39.078564Z",
+          "from": "策枢",
+          "to": "行枢",
+          "remark": "⚡ 用户钦命：衡枢disabled，直接转行枢执行A计划"
+        },
+        {
+          "at": "2026-02-24T14:07:07.407940Z",
+          "from": "策枢",
+          "to": "执行中",
+          "remark": "✅ GitHub Topics(13个)已添加 ✅ README竞品对比表已push | 🔄 等待：Docker镜像、Demo GIF、HN帖子"
+        },
+        {
+          "at": "2026-02-24T14:10:41.895659Z",
+          "from": "行枢",
+          "to": "策枢",
+          "remark": "Week1回奏：品部README已推送(87f0313)，技部Dockerfile本地就绪，安部截图已生成。待决策：Docker Hub授权 + GIF录制方式"
+        }
+      ],
+      "updatedAt": "2026-02-24T14:10:41.895659Z",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-23 22:07:11"
+      },
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 2分钟前",
+        "ageSec": 157
+      }
+    },
+    {
+      "id": "JJC-20260224-013",
+      "title": "电芯循环数据清洗小模型方案",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Strategy",
+      "now": "策枢正在起草规划方案",
+      "eta": "-",
+      "block": "无",
+      "output": "",
+      "ac": "",
+      "review_round": 0,
+      "flow_log": [
+        {
+          "at": "2026-02-24T10:29:22.597859Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：电芯循环数据清洗小模型方案"
+        }
+      ],
+      "updatedAt": "2026-02-24T10:29:22.598063Z",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-23 22:07:11"
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260224-001",
+      "title": "每日早朝简报系统（7点图文新闻）",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "早朝简报系统已上线：20条新闻，今晚首次运行成功",
+      "eta": "-",
+      "block": "无",
+      "output": "http://127.0.0.1:7891 → 🌅 早朝简报",
+      "ac": "",
+      "review_round": 1,
+      "flow_log": [
+        {
+          "at": "2026-02-23T16:03:04.183711Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：每日7:00早朝看板，含政治/军事/经济/AI大模型新闻，图文并茂"
+        },
+        {
+          "at": "2026-02-23T16:03:42.611779Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "📋 提交第1轮：新闻采集脚本+定时触发+早朝Tab，串行执行"
+        },
+        {
+          "at": "2026-02-23T16:10:11.354802Z",
+          "from": "衡枢",
+          "to": "策枢",
+          "remark": "🟡 附条件审核通过：①Brave API直调+降级②schema契约③去重④存档⑤图片本地化⑥时效过滤"
+        },
+        {
+          "at": "2026-02-23T16:10:11.354802Z",
+          "from": "行枢",
+          "to": "六部",
+          "remark": "📮 派发：品部→采集脚本，技部→看板Tab+定时触发"
+        },
+        {
+          "at": "2026-02-23T16:18:33.625030Z",
+          "from": "技部",
+          "to": "行枢",
+          "remark": "✅ 完成：早朝Tab上线，morning_review cron已注册每日6:00，20条新闻采集成功"
+        },
+        {
+          "at": "2026-02-23T16:18:33.625030Z",
+          "from": "行枢",
+          "to": "用户",
+          "remark": "✅ 回奏：早朝简报系统已就绪，明日7:00可见4板块20条图文新闻"
+        }
+      ],
+      "updatedAt": "2026-02-23T16:18:33.625030Z",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260223-014",
+      "title": "看板流程合规审查 + 省部调度Tab优化",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "三项全部完成：六部SOUL合规/省部调度重设计/续流修复",
+      "eta": "-",
+      "block": "无",
+      "output": "agents/*/SOUL.md + dashboard.html省部调度Tab",
+      "ac": "",
+      "review_round": 1,
+      "flow_log": [
+        {
+          "at": "2026-02-23T15:52:11.651567Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：①检查各部看板更新合规性②优化省部调度Tab，违者罚俸1月"
+        },
+        {
+          "at": "2026-02-23T15:52:40.196390Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "📋 提交第1轮方案：六部SOUL合规+省部调度Tab重设计+看板审计"
+        },
+        {
+          "at": "2026-02-23T15:56:00.668461Z",
+          "from": "衡枢",
+          "to": "策枢",
+          "remark": "⚠️ 附条件审核通过：①人部漏列②品部自审矛盾③审计漏洞④数据源不明"
+        },
+        {
+          "at": "2026-02-23T15:56:00.668461Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "✅ 四条全部采纳：人部由行枢兼管/中书统一模板/last_kanban_update强制项/数据源明确为tasks_source.json"
+        },
+        {
+          "at": "2026-02-23T15:56:00.668461Z",
+          "from": "行枢",
+          "to": "六部",
+          "remark": "📮 三路并行派发：品部→六部SOUL模板；技部→省部调度重设计+审计字段"
+        },
+        {
+          "at": "2026-02-23T15:58:06.705347Z",
+          "from": "技部",
+          "to": "用户",
+          "remark": "✅ 回奏：①六部SOUL.md已补正（强制look板更新+罚俸机制）②省部调度改为当班一览③策枢续流铁律已写入SOUL"
+        }
+      ],
+      "updatedAt": "2026-02-23T15:58:06.705347Z",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260223-013",
+      "title": "官员总览看板重新设计",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "官员总览全面重设计完成：左右分栏+品级排行+参与任务+费用准确",
+      "eta": "-",
+      "block": "无",
+      "output": "http://127.0.0.1:7891 → 👥 官员总览",
+      "ac": "",
+      "review_round": 1,
+      "flow_log": [
+        {
+          "at": "2026-02-23T15:25:50.576961Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：官员总览看板朕不满意，重新设计，衡枢不得摸鱼"
+        },
+        {
+          "at": "2026-02-23T15:27:02.331755Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "📋 提交规划方案第1轮：官员总览重设计（布局重构/数据修复/历史任务反查）"
+        },
+        {
+          "at": "2026-02-23T15:39:00Z",
+          "from": "衡枢",
+          "to": "策枢",
+          "remark": "⚠️ 附条件审核通过：需补充①刷新机制②任务数据源③Token扫描回归范围，三项明确后无需二次审议"
+        },
+        {
+          "at": "2026-02-23T15:42:33.704207Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "✅ 三条件回应：①5秒轮询+15秒refresh loop；②从tasks_source.json的flow_log反查；③仅改sync_officials_stats.py，不影响其他模块"
+        },
+        {
+          "at": "2026-02-23T15:42:33.704207Z",
+          "from": "行枢",
+          "to": "技部",
+          "remark": "📮 派发：官员总览重设计，含布局重构/Token扫描修复/历史任务反查"
+        },
+        {
+          "at": "2026-02-23T15:46:00.352147Z",
+          "from": "技部",
+          "to": "用户",
+          "remark": "✅ 回奏：官员总览重设计完成，含品级排行榜/任务参与/Token/缓存费用拆分，请用户御览"
+        }
+      ],
+      "updatedAt": "2026-02-23T15:46:00.352147Z",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260223-012",
+      "title": "看板增加官员总览面板",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "官员总览 Tab 已上线：功绩排行/Token费用/心跳监控",
+      "eta": "2026-02-23 23:10",
+      "block": "无",
+      "output": "http://127.0.0.1:7891 → 👥 官员总览",
+      "ac": "官员总览Tab上线，含模型费用/功绩统计/监控项",
+      "flow_log": [
+        {
+          "at": "2026-02-23T14:57:23Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：看板增加官员总览 - 模型额度/功绩统计/监控项"
+        },
+        {
+          "at": "2026-02-23T14:58:10Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "📋 提交规划方案：官员总览Tab，含Token统计/费用估算/功绩排名/心跳监控"
+        },
+        {
+          "at": "2026-02-23T14:58:40Z",
+          "from": "衡枢",
+          "to": "行枢",
+          "remark": "✅ 审核通过：方案可行，无风险，转行枢派发执行"
+        },
+        {
+          "at": "2026-02-23T14:59:05Z",
+          "from": "行枢",
+          "to": "技部",
+          "remark": "📮 派发：技部负责构建官员统计同步脚本与看板Tab"
+        },
+        {
+          "at": "2026-02-23T15:16:00Z",
+          "from": "技部",
+          "to": "行枢",
+          "remark": "完成：scripts/sync_officials_stats.py + 官员总览Tab，API已验证"
+        },
+        {
+          "at": "2026-02-23T15:16:30Z",
+          "from": "行枢",
+          "to": "用户",
+          "remark": "✅ 回奏：官员总览上线，含功绩排行/实际费用/Token统计/心跳监控"
+        }
+      ],
+      "updatedAt": "2026-02-23T15:20:31.690832Z",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260223-011",
+      "title": "三省七部制开源 GitHub 项目",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "已完成：项目已推送至 https://github.com/rogerhorsley/agents_company_for_happycapy",
+      "eta": "2026-02-23 22:37",
+      "block": "无",
+      "output": "https://github.com/rogerhorsley/agents_company_for_happycapy",
+      "ac": "看板增强、文档完整、一键安装、GitHub推送",
+      "flow_log": [
+        {
+          "at": "2026-02-23T14:51:33Z",
+          "from": "用户",
+          "to": "策枢",
+          "remark": "下达指令：把三省七部制做成开源GitHub项目，补全看板功能，写好文档"
+        },
+        {
+          "at": "2026-02-23T14:53:00Z",
+          "from": "策枢",
+          "to": "技部",
+          "remark": "执行：构建 dashboard.html + server.py + 全套脚本"
+        },
+        {
+          "at": "2026-02-23T15:00:00Z",
+          "from": "技部",
+          "to": "品部",
+          "remark": "执行：撰写 README.md（中英双版）"
+        },
+        {
+          "at": "2026-02-23T15:37:00Z",
+          "from": "策枢",
+          "to": "用户",
+          "remark": "✅ 回奏：https://github.com/rogerhorsley/agents_company_for_happycapy 已上线"
+        }
+      ],
+      "updatedAt": "2026-02-23T15:16:22.408230Z",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-20260223-010",
+      "title": "电芯循环测试数据预测算法设计与可视化验证",
+      "official": "首席运营官",
+      "org": "行枢",
+      "state": "Done",
+      "now": "全部完成，已回奏用户",
+      "eta": "2026-02-23 21:30",
+      "block": "无",
+      "output": "/Users/bingsen/.openclaw/workspace-execution/",
+      "flow_log": [
+        {
+          "at": "2026-02-23T12:23:15Z",
+          "from": "用户",
+          "to": "行枢",
+          "remark": "下达指令：设计电芯循环测试数据预测算法并可视化验证"
+        },
+        {
+          "at": "2026-02-23T12:23:15Z",
+          "from": "行枢",
+          "to": "策枢",
+          "remark": "请求规划拆解"
+        },
+        {
+          "at": "2026-02-23T12:43:00Z",
+          "from": "策枢",
+          "to": "衡枢",
+          "remark": "规划方案提交审核（财部→安部串行+品部并行）"
+        },
+        {
+          "at": "2026-02-23T12:55:00Z",
+          "from": "衡枢",
+          "to": "行枢",
+          "remark": "✅ 审核通过：方案完整，路线合理，可执行"
+        },
+        {
+          "at": "2026-02-23T12:57:00Z",
+          "from": "行枢",
+          "to": "财部",
+          "remark": "派发：构造电芯循环测试模拟数据"
+        },
+        {
+          "at": "2026-02-23T12:57:00Z",
+          "from": "行枢",
+          "to": "品部",
+          "remark": "并行派发：起草算法说明文档框架"
+        },
+        {
+          "at": "2026-02-23T13:21:50.426121+00:00",
+          "from": "行枢",
+          "to": "财部",
+          "remark": "正式派发：生成电芯循环测试模拟数据"
+        },
+        {
+          "at": "2026-02-23T13:21:50.426121+00:00",
+          "from": "行枢",
+          "to": "品部",
+          "remark": "正式派发（并行）：撰写算法说明文档"
+        },
+        {
+          "at": "2026-02-23T13:26:44.518730+00:00",
+          "from": "财部",
+          "to": "行枢",
+          "remark": "✅ 完成：battery_cycle_data.csv（1000行）"
+        },
+        {
+          "at": "2026-02-23T13:26:44.518730+00:00",
+          "from": "品部",
+          "to": "行枢",
+          "remark": "✅ 完成：algorithm_report.md"
+        },
+        {
+          "at": "2026-02-23T13:26:44.518730+00:00",
+          "from": "行枢",
+          "to": "安部",
+          "remark": "派发：实现RandomForest预测算法 + 可视化图表"
+        },
+        {
+          "at": "2026-02-23T13:31:08.577447+00:00",
+          "from": "安部",
+          "to": "行枢",
+          "remark": "✅ 完成：battery_predictor.py + 3张可视化图，R²=0.9641"
+        },
+        {
+          "at": "2026-02-23T13:31:08.577447+00:00",
+          "from": "行枢",
+          "to": "用户",
+          "remark": "✅ 全流程完成，回奏"
+        }
+      ],
+      "ac": "Python脚本可运行，图表可查，文档完整",
+      "updatedAt": "2026-02-23T13:34:19.393358+00:00",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-23 21:27:18"
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-STRATEGY-001",
+      "title": "策枢：并行流程规划",
+      "official": "首席战略官",
+      "org": "策枢",
+      "state": "Done",
+      "now": "已完成：三省七部并行流程规划",
+      "eta": "已完成 2026-02-23 10:27",
+      "block": "无",
+      "output": "/Users/bingsen/clawd/junjichu-v2/docs/三省七部-OpenClaw实施指南-实装版-v1.md",
+      "flow": {
+        "draft": "已起草",
+        "review": "门下通过",
+        "dispatch": "已归档"
+      },
+      "ac": "形成可执行步骤与验收口径",
+      "updatedAt": "2026-02-23T13:34:19.393358+00:00",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-23 10:05:17"
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-SECURITY-001",
+      "title": "安部：看板细节渲染修复",
+      "official": "安全总监",
+      "org": "安部",
+      "state": "Done",
+      "now": "已完成：抽屉细节与事件流渲染",
+      "eta": "已完成 2026-02-23 10:27",
+      "block": "无",
+      "output": "/Users/bingsen/clawd/junjichu-v2/dashboard.html",
+      "flow": {
+        "draft": "首席运营官指令",
+        "review": "门下通过",
+        "dispatch": "已归档"
+      },
+      "ac": "详情页可见最近事件",
+      "updatedAt": "2026-02-23T13:34:19.393358+00:00",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-24 21:51:23"
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "JJC-REVIEW-001",
+      "title": "衡枢：并行任务审议",
+      "official": "首席审核官",
+      "org": "衡枢",
+      "state": "Done",
+      "now": "已完成：审核通过并归档",
+      "eta": "已完成 2026-02-23 10:27",
+      "block": "无",
+      "output": "/Users/bingsen/clawd/junjichu-v2/data/live_status.json",
+      "flow": {
+        "draft": "审议立案",
+        "review": "通过",
+        "dispatch": "审核通过"
+      },
+      "ac": "给出审核通过结论",
+      "updatedAt": "2026-02-23T13:34:19.393358+00:00",
+      "outputMeta": {
+        "exists": true,
+        "lastModified": "2026-02-24 22:13:11"
+      },
+      "heartbeat": null
+    },
+    {
+      "id": "MC-adf92a7e",
+      "title": "安部：Mission Control 映射验收",
+      "official": "安全总监",
+      "org": "安部",
+      "state": "Done",
+      "now": "Mission Control 映射已验收完成，系统正常运行",
+      "eta": "-",
+      "block": "无",
+      "output": "mission-control://boards/2ed2acde-f66f-46f9-ad3b-bc502dfffa83/tasks/adf92a7e-def5-4e67-b304-666ec74aaa34",
+      "flow": {
+        "draft": "board=军机处-安部",
+        "review": "门下通过",
+        "dispatch": "mission-control"
+      },
+      "ac": "Mission Control 映射；审批 pending=0, rejected=0",
+      "sourceMeta": {
+        "source": "mission_control",
+        "boardId": "2ed2acde-f66f-46f9-ad3b-bc502dfffa83",
+        "taskId": "adf92a7e-def5-4e67-b304-666ec74aaa34",
+        "approvalPending": 0,
+        "approvalRejected": 0,
+        "updatedAt": 1771857504947
+      },
+      "updatedAt": "2026-02-23T22:55:13.612669",
+      "outputMeta": {
+        "exists": false,
+        "lastModified": null
+      },
+      "heartbeat": null
+    }
+  ],
+  "history": [
+    {
+      "at": "未知",
+      "official": "首席战略官",
+      "task": "每日早朝简报系统（7点图文新闻）",
+      "out": "http://127.0.0.1:7891 → 🌅 早朝简报",
+      "qa": "待补成果"
+    },
+    {
+      "at": "未知",
+      "official": "首席战略官",
+      "task": "看板流程合规审查 + 省部调度Tab优化",
+      "out": "agents/*/SOUL.md + dashboard.html省部调度Tab",
+      "qa": "待补成果"
+    },
+    {
+      "at": "未知",
+      "official": "首席战略官",
+      "task": "官员总览看板重新设计",
+      "out": "http://127.0.0.1:7891 → 👥 官员总览",
+      "qa": "待补成果"
+    },
+    {
+      "at": "未知",
+      "official": "首席战略官",
+      "task": "看板增加官员总览面板",
+      "out": "http://127.0.0.1:7891 → 👥 官员总览",
+      "qa": "待补成果"
+    },
+    {
+      "at": "未知",
+      "official": "首席战略官",
+      "task": "三省七部制开源 GitHub 项目",
+      "out": "https://github.com/rogerhorsley/agents_company_for_happycapy",
+      "qa": "待补成果"
+    },
+    {
+      "at": "2026-02-23 21:27:18",
+      "official": "首席运营官",
+      "task": "电芯循环测试数据预测算法设计与可视化验证",
+      "out": "/Users/bingsen/.openclaw/workspace-execution/",
+      "qa": "通过"
+    },
+    {
+      "at": "2026-02-23 10:05:17",
+      "official": "首席战略官",
+      "task": "策枢：并行流程规划",
+      "out": "/Users/bingsen/clawd/junjichu-v2/docs/三省七部-OpenClaw实施指南-实装版-v1.md",
+      "qa": "通过"
+    },
+    {
+      "at": "2026-02-24 21:51:23",
+      "official": "安全总监",
+      "task": "安部：看板细节渲染修复",
+      "out": "/Users/bingsen/clawd/junjichu-v2/dashboard.html",
+      "qa": "通过"
+    },
+    {
+      "at": "2026-02-24 22:13:11",
+      "official": "首席审核官",
+      "task": "衡枢：并行任务审议",
+      "out": "/Users/bingsen/clawd/junjichu-v2/data/live_status.json",
+      "qa": "通过"
+    },
+    {
+      "at": "未知",
+      "official": "安全总监",
+      "task": "安部：Mission Control 映射验收",
+      "out": "mission-control://boards/2ed2acde-f66f-46f9-ad3b-bc502dfffa83/tasks/adf92a7e-def5-4e67-b304-666ec74aaa34",
+      "qa": "待补成果"
+    }
+  ],
+  "metrics": {
+    "officialCount": 9,
+    "todayDone": 10,
+    "inProgress": 13,
+    "blocked": 0
+  },
+  "syncStatus": {
+    "ok": true,
+    "statusLevel": "ok",
+    "consecutiveFailures": 0,
+    "lastSuccessAt": "2026-02-24 22:13:06",
+    "lastSyncAt": "2026-02-24 22:13:06",
+    "durationMs": 4720,
+    "source": "openclaw_runtime_to_feishu_bitable",
+    "recordCount": 24,
+    "created": 0,
+    "updated": 3,
+    "skipped": 21,
+    "archived": 0,
+    "missingFields": {},
+    "error": null
+  },
+  "health": {
+    "syncOk": true,
+    "syncLatencyMs": 4720,
+    "missingFieldCount": 0
+  }
+}

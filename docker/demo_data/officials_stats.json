@@ -1,0 +1,390 @@
+{
+  "generatedAt": "2026-03-22 10:00:00",
+  "officials": [
+    {
+      "id": "strategy",
+      "label": "策枢",
+      "role": "首席战略官",
+      "emoji": "🧠",
+      "rank": "C-Suite",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 1,
+      "tokens_in": 66,
+      "tokens_out": 2712,
+      "cache_read": 1027806,
+      "cache_write": 148826,
+      "tokens_total": 2778,
+      "messages": 177,
+      "cost_usd": 0.9073,
+      "cost_cny": 6.58,
+      "last_active": "2026-03-22 09:45",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 2分钟前",
+        "ageSec": 120
+      },
+      "tasks_done": 6,
+      "tasks_active": 2,
+      "flow_participations": 23,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-004",
+          "title": "竞品分析：CrewAI vs AutoGen vs 三省七部",
+          "state": "Review"
+        },
+        {
+          "id": "JJC-20260322-003",
+          "title": "更新并推送 Docker Hub 镜像",
+          "state": "Done"
+        },
+        {
+          "id": "JJC-20260322-002",
+          "title": "对项目仓库进行代码审查",
+          "state": "Doing"
+        },
+        {
+          "id": "JJC-20260322-001",
+          "title": "生成本周项目进展周报",
+          "state": "Done"
+        }
+      ],
+      "merit_score": 107,
+      "merit_rank": 1
+    },
+    {
+      "id": "review",
+      "label": "衡枢",
+      "role": "首席审核官",
+      "emoji": "⚖️",
+      "rank": "C-Suite",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 0,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 0,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": null,
+      "heartbeat": {
+        "status": "idle",
+        "label": "⚪ 待命",
+        "ageSec": null
+      },
+      "tasks_done": 1,
+      "tasks_active": 0,
+      "flow_participations": 12,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-004",
+          "title": "竞品分析：CrewAI vs AutoGen vs 三省七部",
+          "state": "Review"
+        },
+        {
+          "id": "JJC-20260322-001",
+          "title": "生成本周项目进展周报",
+          "state": "Done"
+        }
+      ],
+      "merit_score": 34,
+      "merit_rank": 3
+    },
+    {
+      "id": "execution",
+      "label": "行枢",
+      "role": "首席运营官",
+      "emoji": "🎯",
+      "rank": "C-Suite",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 6,
+      "tokens_in": 416,
+      "tokens_out": 50308,
+      "cache_read": 2196943,
+      "cache_write": 136506,
+      "tokens_total": 50724,
+      "messages": 187,
+      "cost_usd": 1.9268,
+      "cost_cny": 13.97,
+      "last_active": "2026-03-22 09:43",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 2分钟前",
+        "ageSec": 165
+      },
+      "tasks_done": 1,
+      "tasks_active": 2,
+      "flow_participations": 23,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-004",
+          "title": "竞品分析：CrewAI vs AutoGen vs 三省七部",
+          "state": "Review"
+        },
+        {
+          "id": "JJC-20260322-003",
+          "title": "更新并推送 Docker Hub 镜像",
+          "state": "Done"
+        },
+        {
+          "id": "JJC-20260322-002",
+          "title": "对项目仓库进行代码审查",
+          "state": "Doing"
+        },
+        {
+          "id": "JJC-20260322-001",
+          "title": "生成本周项目进展周报",
+          "state": "Done"
+        }
+      ],
+      "merit_score": 62,
+      "merit_rank": 2
+    },
+    {
+      "id": "research",
+      "label": "谋部",
+      "role": "战略研究总监",
+      "emoji": "🔭",
+      "rank": "VP",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 1,
+      "tokens_in": 122,
+      "tokens_out": 3681,
+      "cache_read": 427760,
+      "cache_write": 36922,
+      "tokens_total": 3803,
+      "messages": 15,
+      "cost_usd": 0.3224,
+      "cost_cny": 2.34,
+      "last_active": "2026-03-22 09:00",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 45分钟前",
+        "ageSec": 2700
+      },
+      "tasks_done": 0,
+      "tasks_active": 1,
+      "flow_participations": 1,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-004",
+          "title": "竞品分析：CrewAI vs AutoGen vs 三省七部",
+          "state": "Review"
+        }
+      ],
+      "merit_score": 17,
+      "merit_rank": 4
+    },
+    {
+      "id": "hr",
+      "label": "人部",
+      "role": "人才总监",
+      "emoji": "👥",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 0,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 0,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": null,
+      "heartbeat": {
+        "status": "idle",
+        "label": "⚪ 待命",
+        "ageSec": null
+      },
+      "tasks_done": 0,
+      "tasks_active": 0,
+      "flow_participations": 0,
+      "participated_tasks": [],
+      "merit_score": 0,
+      "merit_rank": 8
+    },
+    {
+      "id": "finance",
+      "label": "财部",
+      "role": "财务总监",
+      "emoji": "💰",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 0,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 0,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": null,
+      "heartbeat": {
+        "status": "idle",
+        "label": "⚪ 待命",
+        "ageSec": null
+      },
+      "tasks_done": 0,
+      "tasks_active": 0,
+      "flow_participations": 0,
+      "participated_tasks": [],
+      "merit_score": 0,
+      "merit_rank": 9
+    },
+    {
+      "id": "brand",
+      "label": "品部",
+      "role": "品牌总监",
+      "emoji": "📣",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 1,
+      "tokens_in": 42,
+      "tokens_out": 6566,
+      "cache_read": 73286,
+      "cache_write": 22855,
+      "tokens_total": 6608,
+      "messages": 5,
+      "cost_usd": 0.2063,
+      "cost_cny": 1.5,
+      "last_active": "2026-03-22 09:15",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 30分钟前",
+        "ageSec": 1800
+      },
+      "tasks_done": 1,
+      "tasks_active": 0,
+      "flow_participations": 1,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-001",
+          "title": "生成本周项目进展周报",
+          "state": "Done"
+        }
+      ],
+      "merit_score": 9,
+      "merit_rank": 6
+    },
+    {
+      "id": "security",
+      "label": "安部",
+      "role": "安全总监",
+      "emoji": "🛡️",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 1,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 26,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": "2026-03-22 10:30",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 15分钟前",
+        "ageSec": 900
+      },
+      "tasks_done": 0,
+      "tasks_active": 1,
+      "flow_participations": 1,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-002",
+          "title": "对项目仓库进行代码审查",
+          "state": "Doing"
+        }
+      ],
+      "merit_score": 5,
+      "merit_rank": 7
+    },
+    {
+      "id": "compliance",
+      "label": "规部",
+      "role": "合规总监",
+      "emoji": "📋",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 0,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 0,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": null,
+      "heartbeat": {
+        "status": "idle",
+        "label": "⚪ 待命",
+        "ageSec": null
+      },
+      "tasks_done": 0,
+      "tasks_active": 0,
+      "flow_participations": 0,
+      "participated_tasks": [],
+      "merit_score": 0,
+      "merit_rank": 10
+    },
+    {
+      "id": "tech",
+      "label": "技部",
+      "role": "技术总监",
+      "emoji": "⚙️",
+      "rank": "Director",
+      "model": "anthropic/claude-sonnet-4-6",
+      "model_short": "claude-sonnet-4-6",
+      "sessions": 1,
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "tokens_total": 0,
+      "messages": 0,
+      "cost_usd": 0.0,
+      "cost_cny": 0.0,
+      "last_active": "2026-03-22 14:20",
+      "heartbeat": {
+        "status": "active",
+        "label": "🟢 活跃 25分钟前",
+        "ageSec": 1500
+      },
+      "tasks_done": 1,
+      "tasks_active": 0,
+      "flow_participations": 1,
+      "participated_tasks": [
+        {
+          "id": "JJC-20260322-003",
+          "title": "更新并推送 Docker Hub 镜像",
+          "state": "Done"
+        }
+      ],
+      "merit_score": 3,
+      "merit_rank": 5
+    }
+  ],
+  "totals": {
+    "tokens_total": 63913,
+    "cache_total": 4070904,
+    "cost_usd": 3.36,
+    "cost_cny": 24.39,
+    "tasks_done": 10
+  },
+  "top_official": "策枢"
+}

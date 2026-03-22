@@ -1,0 +1,320 @@
+{
+  "generatedAt": "2026-03-22 10:00:00",
+  "defaultModel": "anthropic/claude-sonnet-4-6",
+  "knownModels": [
+    {
+      "id": "anthropic/claude-sonnet-4-6",
+      "label": "Claude Sonnet 4.6",
+      "provider": "Anthropic"
+    },
+    {
+      "id": "anthropic/claude-opus-4-5",
+      "label": "Claude Opus 4.5",
+      "provider": "Anthropic"
+    },
+    {
+      "id": "anthropic/claude-haiku-3-5",
+      "label": "Claude Haiku 3.5",
+      "provider": "Anthropic"
+    },
+    {
+      "id": "openai/gpt-4o",
+      "label": "GPT-4o",
+      "provider": "OpenAI"
+    },
+    {
+      "id": "openai/gpt-4o-mini",
+      "label": "GPT-4o Mini",
+      "provider": "OpenAI"
+    },
+    {
+      "id": "openai-codex/gpt-5.3-codex",
+      "label": "GPT-5.3 Codex",
+      "provider": "OpenAI Codex"
+    },
+    {
+      "id": "google/gemini-2.0-flash",
+      "label": "Gemini 2.0 Flash",
+      "provider": "Google"
+    },
+    {
+      "id": "google/gemini-2.5-pro",
+      "label": "Gemini 2.5 Pro",
+      "provider": "Google"
+    },
+    {
+      "id": "copilot/claude-sonnet-4",
+      "label": "Claude Sonnet 4",
+      "provider": "Copilot"
+    },
+    {
+      "id": "github-copilot/claude-opus-4.6",
+      "label": "Claude Opus 4.6",
+      "provider": "GitHub Copilot"
+    },
+    {
+      "id": "copilot/claude-opus-4.5",
+      "label": "Claude Opus 4.5",
+      "provider": "Copilot"
+    },
+    {
+      "id": "copilot/gpt-4o",
+      "label": "GPT-4o",
+      "provider": "Copilot"
+    },
+    {
+      "id": "copilot/gemini-2.5-pro",
+      "label": "Gemini 2.5 Pro",
+      "provider": "Copilot"
+    },
+    {
+      "id": "copilot/o3-mini",
+      "label": "o3-mini",
+      "provider": "Copilot"
+    }
+  ],
+  "agents": [
+    {
+      "id": "strategy",
+      "label": "策枢",
+      "role": "首席战略官",
+      "duty": "战略规划与优先级决策",
+      "emoji": "🧠",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-strategy",
+      "skills": [
+        {
+          "name": "planning",
+          "path": "/Users/bingsen/.openclaw/workspace-strategy/skills/planning/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "review",
+        "execution"
+      ]
+    },
+    {
+      "id": "review",
+      "label": "衡枢",
+      "role": "首席审核官",
+      "duty": "方案审议与质量把关",
+      "emoji": "⚖️",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-review",
+      "skills": [
+        {
+          "name": "review",
+          "path": "/Users/bingsen/.openclaw/workspace-review/skills/review/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "strategy",
+        "execution"
+      ]
+    },
+    {
+      "id": "execution",
+      "label": "行枢",
+      "role": "首席运营官",
+      "duty": "任务派发与执行协调",
+      "emoji": "🎯",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-execution",
+      "skills": [
+        {
+          "name": "dispatch",
+          "path": "/Users/bingsen/.openclaw/workspace-execution/skills/dispatch/SKILL.md",
+          "exists": true,
+          "description": "---"
+        },
+        {
+          "name": "kanban-local",
+          "path": "/Users/bingsen/.openclaw/workspace-execution/skills/kanban-local/SKILL.md",
+          "exists": true,
+          "description": "---"
+        },
+        {
+          "name": "organization-governance",
+          "path": "/Users/bingsen/.openclaw/workspace-execution/skills/organization-governance/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "strategy",
+        "review",
+        "research",
+        "hr",
+        "finance",
+        "brand",
+        "security",
+        "compliance",
+        "tech"
+      ]
+    },
+    {
+      "id": "research",
+      "label": "谋部",
+      "role": "战略研究总监",
+      "duty": "市场洞察与竞品分析",
+      "emoji": "🔭",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-research",
+      "skills": [
+        {
+          "name": "research",
+          "path": "/Users/bingsen/.openclaw/workspace-research/skills/research/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "strategy"
+      ]
+    },
+    {
+      "id": "hr",
+      "label": "人部",
+      "role": "人才总监",
+      "duty": "团队建设与人才管理",
+      "emoji": "👥",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-hr",
+      "skills": [
+        {
+          "name": "hr-management",
+          "path": "/Users/bingsen/.openclaw/workspace-hr/skills/hr-management/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    },
+    {
+      "id": "finance",
+      "label": "财部",
+      "role": "财务总监",
+      "duty": "预算管理与成本控制",
+      "emoji": "💰",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-finance",
+      "skills": [
+        {
+          "name": "data-analysis",
+          "path": "/Users/bingsen/.openclaw/workspace-finance/skills/data-analysis/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    },
+    {
+      "id": "brand",
+      "label": "品部",
+      "role": "品牌总监",
+      "duty": "品牌传播与文档规范",
+      "emoji": "📣",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-brand",
+      "skills": [
+        {
+          "name": "doc-writer",
+          "path": "/Users/bingsen/.openclaw/workspace-brand/skills/doc-writer/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "安部",
+      "role": "安全总监",
+      "duty": "安全防护与应急响应",
+      "emoji": "🛡️",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-security",
+      "skills": [
+        {
+          "name": "security-review",
+          "path": "/Users/bingsen/.openclaw/workspace-security/skills/security-review/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    },
+    {
+      "id": "compliance",
+      "label": "规部",
+      "role": "合规总监",
+      "duty": "合规审计与风险管控",
+      "emoji": "📋",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-compliance",
+      "skills": [
+        {
+          "name": "compliance-audit",
+          "path": "/Users/bingsen/.openclaw/workspace-compliance/skills/compliance-audit/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    },
+    {
+      "id": "tech",
+      "label": "技部",
+      "role": "技术总监",
+      "duty": "技术交付与系统运维",
+      "emoji": "⚙️",
+      "model": "anthropic/claude-sonnet-4-6",
+      "defaultModel": "anthropic/claude-sonnet-4-6",
+      "isDefaultModel": true,
+      "workspace": "/Users/bingsen/.openclaw/workspace-tech",
+      "skills": [
+        {
+          "name": "ops",
+          "path": "/Users/bingsen/.openclaw/workspace-tech/skills/ops/SKILL.md",
+          "exists": true,
+          "description": "---"
+        }
+      ],
+      "allowAgents": [
+        "execution"
+      ]
+    }
+  ]
+}

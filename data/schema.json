@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "title": "指挥中心",
+    "ownerTitle": "用户",
+    "version": "v4"
+  },
+  "states": ["Pending", "Research", "Strategy", "Review", "Execution", "Doing", "Done", "Blocked", "Cancelled"],
+  "stateFlow": "Pending → Research → Strategy → Review → Execution → Doing → Done",
+  "terminalStates": ["Done", "Cancelled"],
+  "roles": {
+    "research": "谋部",
+    "strategy": "策枢",
+    "review": "衡枢",
+    "execution": "行枢",
+    "hr": "人部",
+    "finance": "财部",
+    "brand": "品部",
+    "security": "安部",
+    "compliance": "规部",
+    "tech": "技部"
+  },
+  "taskFields": [
+    "id",
+    "title",
+    "official",
+    "org",
+    "state",
+    "now",
+    "eta",
+    "block",
+    "output",
+    "ac",
+    "flow_log",
+    "updatedAt",
+    "todos",
+    "progress_log"
+  ]
+}

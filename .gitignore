@@ -1,0 +1,43 @@
+# Runtime data (machine-specific)
+data/live_status.json
+data/agent_config.json
+data/model_change_log.json
+data/pending_model_changes.json
+data/last_model_change_result.json
+data/sync_status.json
+data/tasks_source.json
+data/tasks.json
+data/bitable_source.json
+data/mission_control_tasks.json
+
+# Logs
+*.log
+/tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# macOS
+.DS_Store
+*.swp
+
+# Node.js
+node_modules/
+app/frontend/node_modules/
+
+# Backups
+*.bak*
+
+# Runtime user data
+data/users.json
+data/channels.json
+data/officials_stats.json
+data/openclaw.json
+data/morning_brief.json
+data/pending_insights.json
+data/*.lock
+.github/workflows/ci.yml
+.vite/
