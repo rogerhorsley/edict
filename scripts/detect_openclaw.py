@@ -2,6 +2,7 @@
 detect_openclaw.py — Detect local OpenClaw/AutoClaw installations
 and return structured information for memory inheritance.
 """
+from __future__ import annotations
 
 import json
 import os

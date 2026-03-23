@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 圆桌议事引擎 — 多部门实时讨论系统
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 三省七部 · 看板本地 API 服务器
 Port: 7891 (可通过 --port 修改)
