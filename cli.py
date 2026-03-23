@@ -119,7 +119,7 @@ def api_base() -> str:
     return cfg.get('api_base', 'http://127.0.0.1:7891')
 
 
-def api_call(endpoint: str, method: str = 'GET', data: dict | None = None) -> dict:
+def api_call(endpoint, method='GET', data=None):
     url = f'{api_base()}{endpoint}'
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
