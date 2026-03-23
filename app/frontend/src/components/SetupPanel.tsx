@@ -435,9 +435,16 @@ function AccountSection() {
   const [loginName, setLoginName] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
-  const [authConfig, setAuthConfig] = useState<{ google_client_id: string; has_env_login: boolean } | null>(null);
+  const [authConfig, setAuthConfig] = useState<{ google_client_id: string; has_env_login: boolean; has_happycapy_login?: boolean } | null>(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const googleBtnRef = useRef<HTMLDivElement>(null);
+
+  // HappyCapy login flow
+  const [hcStep, setHcStep] = useState<'email' | 'code' | null>(null);
+  const [hcEmail, setHcEmail] = useState('');
+  const [hcCode, setHcCode] = useState('');
+  const [hcSending, setHcSending] = useState(false);
+  const [hcError, setHcError] = useState('');
 
   // API Key form
   const [apiProvider, setApiProvider] = useState('anthropic');
@@ -519,6 +526,53 @@ function AccountSection() {
       width: 280,
     });
   }, [googleLoaded, isAuthenticated, authConfig?.google_client_id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleHcSendCode = async () => {
+    if (!hcEmail.trim()) {
+      toast('Please enter your HappyCapy email', 'err');
+      return;
+    }
+    setHcSending(true);
+    setHcError('');
+    try {
+      const r = await api.authHappyCapySendCode(hcEmail.trim());
+      if (r.ok) {
+        setHcStep('code');
+        toast('Verification code sent to ' + hcEmail, 'ok');
+      } else {
+        setHcError(r.error || 'Failed to send code');
+      }
+    } catch {
+      setHcError('Failed to send verification code');
+    } finally {
+      setHcSending(false);
+    }
+  };
+
+  const handleHcVerify = async () => {
+    if (!hcCode.trim()) {
+      toast('Please enter the verification code', 'err');
+      return;
+    }
+    setHcSending(true);
+    setHcError('');
+    try {
+      const r = await api.authHappyCapyVerify(hcEmail.trim(), hcCode.trim());
+      if (r.ok && r.token) {
+        await login(r.token);
+        toast('Logged in with HappyCapy', 'ok');
+        setHcStep(null);
+        setHcEmail('');
+        setHcCode('');
+      } else {
+        setHcError(r.error || 'Invalid code');
+      }
+    } catch {
+      setHcError('Verification failed');
+    } finally {
+      setHcSending(false);
+    }
+  };
 
   const handleLogin = async () => {
     if (!loginEmail.trim()) {
@@ -630,8 +684,52 @@ function AccountSection() {
         </div>
       ) : (
         <div className="setup-card">
+          {/* HappyCapy Login (primary) */}
+          {authConfig?.has_happycapy_login && !hcStep && (
+            <>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>Login with HappyCapy</div>
+              <input className="setup-input" value={hcEmail}
+                onChange={(e) => setHcEmail(e.target.value)}
+                placeholder="Your HappyCapy email"
+                onKeyDown={(e) => e.key === 'Enter' && handleHcSendCode()} />
+              <button className="btn btn-p" style={{ marginTop: 8 }} disabled={hcSending} onClick={handleHcSendCode}>
+                {hcSending ? 'Sending...' : 'Send Verification Code'}
+              </button>
+              {hcError && <div style={{ color: 'var(--danger)', fontSize: 12, marginTop: 4 }}>{hcError}</div>}
+              <div style={{ textAlign: 'center', margin: '12px 0', color: 'var(--muted)', fontSize: 12 }}>
+                ──── or ────
+              </div>
+            </>
+          )}
+
+          {/* HappyCapy code verification step */}
+          {hcStep === 'code' && (
+            <>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>Enter Verification Code</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>
+                Code sent to {hcEmail}
+              </div>
+              <input className="setup-input" value={hcCode}
+                onChange={(e) => setHcCode(e.target.value)}
+                placeholder="6-digit code" autoFocus
+                onKeyDown={(e) => e.key === 'Enter' && handleHcVerify()} />
+              <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                <button className="btn btn-p" disabled={hcSending} onClick={handleHcVerify}>
+                  {hcSending ? 'Verifying...' : 'Verify & Login'}
+                </button>
+                <button className="btn btn-g" onClick={() => { setHcStep(null); setHcCode(''); setHcError(''); }}>
+                  Back
+                </button>
+                <button className="btn btn-g" disabled={hcSending} onClick={handleHcSendCode}>
+                  Resend
+                </button>
+              </div>
+              {hcError && <div style={{ color: 'var(--danger)', fontSize: 12, marginTop: 4 }}>{hcError}</div>}
+            </>
+          )}
+
           {/* Google Sign-In */}
-          {authConfig?.google_client_id && (
+          {!hcStep && authConfig?.google_client_id && (
             <>
               <div ref={googleBtnRef} style={{ marginBottom: 12 }} />
               <div style={{ textAlign: 'center', margin: '8px 0', color: 'var(--muted)', fontSize: 12 }}>
@@ -640,24 +738,28 @@ function AccountSection() {
             </>
           )}
 
-          {/* Email login */}
-          <input className="setup-input" value={loginEmail}
-            onChange={(e) => setLoginEmail(e.target.value)} placeholder="Email"
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
-          <input className="setup-input" type="password" value={loginPassword}
-            onChange={(e) => setLoginPassword(e.target.value)}
-            placeholder="Password (optional)" style={{ marginTop: 4 }}
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
-          <input className="setup-input" value={loginName}
-            onChange={(e) => setLoginName(e.target.value)}
-            placeholder="Name (optional, for new accounts)" style={{ marginTop: 4 }} />
+          {/* Email login (fallback) */}
+          {!hcStep && (
+            <>
+              <input className="setup-input" value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)} placeholder="Email"
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+              <input className="setup-input" type="password" value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                placeholder="Password (optional)" style={{ marginTop: 4 }}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+              <input className="setup-input" value={loginName}
+                onChange={(e) => setLoginName(e.target.value)}
+                placeholder="Name (optional, for new accounts)" style={{ marginTop: 4 }} />
 
-          <button className="btn btn-p" style={{ marginTop: 8 }} disabled={loggingIn} onClick={handleLogin}>
-            {loggingIn ? 'Logging in...' : 'Login'}
-          </button>
+              <button className="btn btn-p" style={{ marginTop: 8 }} disabled={loggingIn} onClick={handleLogin}>
+                {loggingIn ? 'Logging in...' : 'Login with Email'}
+              </button>
+            </>
+          )}
 
           <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8 }}>
-            Login to use your personal API keys and model preferences. The dashboard works without login.
+            Login with HappyCapy to sync your API key. Or use email for local-only access.
           </div>
         </div>
       )}

@@ -392,6 +392,63 @@ def cmd_config_set(args):
 # ── Commands: Auth ──
 
 def cmd_login(args):
+    # HappyCapy login (email + verification code)
+    if args.happycapy or (not args.email):
+        # Try env auto-login first
+        result = api_call('/api/auth/env-login', 'POST', {})
+        if result.get('ok') and result.get('token'):
+            save_auth(result['token'], result.get('user', {}))
+            name = result.get('user', {}).get('name', '?')
+            print(f'Auto-logged in as {name} (HappyCapy environment)')
+            return
+
+        # HappyCapy verification code flow
+        email = args.email or ''
+        if not email:
+            try:
+                email = input('HappyCapy email: ').strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                sys.exit(1)
+        if not email:
+            print('Email is required.')
+            sys.exit(1)
+
+        # Send verification code
+        print(f'Sending verification code to {email}...')
+        result = api_call('/api/auth/happycapy-send-code', 'POST', {'email': email})
+        if not result.get('ok'):
+            err = result.get('error', 'Failed to send code')
+            print(f'Error: {err}')
+            # Fallback to local email login
+            if not args.happycapy:
+                print('Falling back to local email login...')
+                result = api_call('/api/auth/login', 'POST', {'email': email, 'name': email.split('@')[0]})
+                if result.get('ok') and result.get('token'):
+                    save_auth(result['token'], result.get('user', {}))
+                    print(f'Logged in as {result.get("user", {}).get("name", email)} (local)')
+                    return
+            sys.exit(1)
+
+        # Get code from user
+        print('Verification code sent! Check your email.')
+        try:
+            code = input('Enter code: ').strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            sys.exit(1)
+
+        result = api_call('/api/auth/happycapy-verify', 'POST', {'email': email, 'code': code})
+        if result.get('ok') and result.get('token'):
+            save_auth(result['token'], result.get('user', {}))
+            name = result.get('user', {}).get('name', email)
+            print(f'Logged in as {name} (HappyCapy)')
+        else:
+            print(f'Verification failed: {result.get("error", "invalid code")}')
+            sys.exit(1)
+        return
+
+    # Email + password login (local)
     if args.email:
         import getpass
         password = ''
@@ -412,20 +469,6 @@ def cmd_login(args):
         else:
             print(f'Login failed: {result.get("error", "unknown")}')
             sys.exit(1)
-        return
-
-    # Try env auto-login
-    result = api_call('/api/auth/env-login', 'POST', {})
-    if result.get('ok') and result.get('token'):
-        save_auth(result['token'], result.get('user', {}))
-        name = result.get('user', {}).get('name', '?')
-        print(f'Auto-logged in as {name} (HappyCapy environment)')
-        return
-
-    # Fallback: prompt for email
-    print('No HappyCapy environment detected.')
-    print('Use: ac login --email your@email.com')
-    print('Or start the dashboard and login via browser: ac dashboard')
 
 
 def cmd_logout(_args):
@@ -632,6 +675,7 @@ def build_parser():
     p = sub.add_parser('login', help='Login to dashboard')
     p.add_argument('--email', '-e', default=None)
     p.add_argument('--name', '-n', default=None)
+    p.add_argument('--happycapy', '-hc', action='store_true', help='Force HappyCapy login (email + verification code)')
 
     # logout
     sub.add_parser('logout', help='Logout')

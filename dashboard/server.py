@@ -21,8 +21,10 @@ Endpoints:
 import json, pathlib, subprocess, sys, threading, argparse, datetime, logging, re, os
 import hashlib, hmac, secrets, time, uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 from urllib.request import Request, urlopen
+import urllib.error
+import urllib.request
 
 # 引入文件锁工具，确保与其他脚本并发安全
 scripts_dir = str(pathlib.Path(__file__).parent.parent / 'scripts')
@@ -256,6 +258,31 @@ def _verify_password(password: str, stored: str) -> bool:
         return hmac.compare_digest(check, pwd_hash)
     except Exception:
         return False
+
+
+def _sync_happycapy_api_key(user: dict, hc_token: str):
+    """Try to read the AI Gateway API key from local auth-profiles and store on user."""
+    import pathlib as _pl
+    # The auth-profiles.json is maintained by install.sh / setup.sh
+    candidates = [
+        _pl.Path.home() / '.openclaw' / 'agents' / 'main' / 'agent' / 'auth-profiles.json',
+        _pl.Path.home() / '.openclaw' / 'auth-profiles.json',
+    ]
+    for cand in candidates:
+        try:
+            profiles = json.loads(cand.read_text())
+            for _name, profile in profiles.get('profiles', {}).items():
+                base_url = profile.get('baseUrl', '')
+                key = profile.get('key', '')
+                if 'happycapy' in base_url and key:
+                    user['api_key'] = key
+                    user['model_endpoint'] = base_url
+                    log.info(f'Synced HappyCapy API key from {cand}')
+                    return
+        except Exception:
+            continue
+    # Fallback: key might be the same as the HappyCapy auth token in some setups
+    log.info('No local auth-profiles found with HappyCapy key')
 
 
 def _get_current_user(handler) -> dict | None:
@@ -2469,7 +2496,7 @@ class Handler(BaseHTTPRequestHandler):
         elif p == '/api/auth/config':
             gcid = os.environ.get('GOOGLE_CLIENT_ID', '')
             has_env = bool(os.environ.get('CAPY_USER_ID', '').strip() and os.environ.get('CAPY_USER_EMAIL', '').strip())
-            self.send_json({'ok': True, 'google_client_id': gcid, 'has_env_login': has_env})
+            self.send_json({'ok': True, 'google_client_id': gcid, 'has_env_login': has_env, 'has_happycapy_login': True})
 
         elif p == '/api/auth/models':
             user = _get_current_user(self)
@@ -3083,6 +3110,126 @@ class Handler(BaseHTTPRequestHandler):
             jwt_token = _jwt_encode({'sub': user['id'], 'email': user.get('email', ''), 'exp': int(time.time()) + _JWT_EXPIRY_SEC})
             safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password')}
             self.send_json({'ok': True, 'token': jwt_token, 'user': safe_user})
+
+        elif p == '/api/auth/happycapy-send-code':
+            email = body.get('email', '').strip()
+            if not email:
+                self.send_json({'ok': False, 'error': 'email required'}, 400)
+                return
+            try:
+                hc_body = urlencode({'email': email, 'type': 'login'}).encode()
+                hc_req = Request(
+                    'https://happycapy.ai/api/auth/v1/sendcode',
+                    data=hc_body,
+                    headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                    method='POST',
+                )
+                with urlopen(hc_req, timeout=15) as resp:
+                    resp.read()
+                self.send_json({'ok': True, 'message': 'Verification code sent'})
+            except urllib.error.HTTPError as e:
+                err_msg = 'Failed to send code'
+                try:
+                    err_data = json.loads(e.read())
+                    err_msg = err_data.get('message', err_data.get('error', err_msg))
+                except Exception:
+                    pass
+                self.send_json({'ok': False, 'error': err_msg}, e.code if e.code < 500 else 502)
+            except Exception as e:
+                log.warning(f'HappyCapy send-code failed: {e}')
+                self.send_json({'ok': False, 'error': str(e)}, 502)
+
+        elif p == '/api/auth/happycapy-verify':
+            email = body.get('email', '').strip()
+            code = body.get('code', '').strip()
+            if not email or not code:
+                self.send_json({'ok': False, 'error': 'email and code required'}, 400)
+                return
+            try:
+                # Step 1: exchange code for HappyCapy access token
+                hc_body = urlencode({
+                    'grant_type': 'login_code',
+                    'email': email,
+                    'code': code,
+                }).encode()
+                hc_req = Request(
+                    'https://happycapy.ai/api/auth/v1/token',
+                    data=hc_body,
+                    headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                    method='POST',
+                )
+                with urlopen(hc_req, timeout=15) as resp:
+                    hc_result = json.loads(resp.read())
+                hc_token = hc_result.get('token', {}).get('access_token', '')
+                hc_user = hc_result.get('user', {})
+                hc_email = hc_user.get('email', email)
+                hc_name = hc_user.get('nickname', hc_email.split('@')[0])
+                hc_uid = str(hc_user.get('id', ''))
+                if not hc_token:
+                    raise ValueError('No access token returned')
+
+                # Step 2: get HappyCapy user profile for sandboxId
+                hc_profile = {}
+                try:
+                    prof_req = Request(
+                        'https://happycapy.ai/api/auth/profile',
+                        headers={'Authorization': f'Bearer {hc_token}'},
+                    )
+                    with urlopen(prof_req, timeout=15) as resp:
+                        prof_data = json.loads(resp.read())
+                    hc_profile = prof_data.get('profile', {})
+                except Exception as pe:
+                    log.warning(f'HappyCapy profile fetch failed: {pe}')
+
+                # Step 3: create/update local user linked to HappyCapy
+                users_data = load_users()
+                user = next((u for u in users_data.get('users', []) if u.get('happycapy_id') == hc_uid), None)
+                if not user:
+                    user = next((u for u in users_data.get('users', []) if u.get('email') == hc_email), None)
+                    if user:
+                        user['happycapy_id'] = hc_uid
+                if not user:
+                    user = {
+                        'id': f'usr_{uuid.uuid4().hex[:12]}',
+                        'happycapy_id': hc_uid,
+                        'google_id': None,
+                        'email': hc_email,
+                        'name': hc_name,
+                        'password': None,
+                        'api_key': None,
+                        'model_endpoint': None,
+                        'preferred_model': None,
+                        'created_at': now_iso(),
+                    }
+                    users_data.setdefault('users', []).append(user)
+                user['name'] = hc_name
+                user['last_login'] = now_iso()
+                user['happycapy_token'] = hc_token
+                user['happycapy_sandbox_id'] = hc_profile.get('sandboxId', '')
+
+                # Step 4: sync AI Gateway API key from HappyCapy auth-profiles
+                # The key is the same as the one OpenClaw agents use
+                _sync_happycapy_api_key(user, hc_token)
+
+                save_users(users_data)
+                jwt_token = _jwt_encode({
+                    'sub': user['id'],
+                    'email': user.get('email', ''),
+                    'exp': int(time.time()) + _JWT_EXPIRY_SEC,
+                })
+                safe_user = {k: v for k, v in user.items() if k not in ('api_key', 'password', 'happycapy_token')}
+                self.send_json({'ok': True, 'token': jwt_token, 'user': safe_user})
+            except urllib.error.HTTPError as e:
+                err_msg = 'Invalid code or expired'
+                try:
+                    err_data = json.loads(e.read())
+                    err_msg = err_data.get('message', err_data.get('error', err_msg))
+                except Exception:
+                    pass
+                self.send_json({'ok': False, 'error': err_msg}, 401)
+            except Exception as e:
+                log.warning(f'HappyCapy verify failed: {e}')
+                self.send_json({'ok': False, 'error': str(e)}, 502)
 
         elif p == '/api/auth/google':
             credential = body.get('credential', '').strip()

@@ -184,6 +184,10 @@ export const api = {
     postJ<AuthLoginResult>(`${API_BASE}/api/auth/env-login`, {}),
   authGoogle: (credential: string) =>
     postJ<AuthLoginResult>(`${API_BASE}/api/auth/google`, { credential }),
+  authHappyCapySendCode: (email: string) =>
+    postJ<ActionResult>(`${API_BASE}/api/auth/happycapy-send-code`, { email }),
+  authHappyCapyVerify: (email: string, code: string) =>
+    postJ<AuthLoginResult>(`${API_BASE}/api/auth/happycapy-verify`, { email, code }),
   authConfig: () =>
     fetchJ<AuthConfigResult>(`${API_BASE}/api/auth/config`),
   authLogout: () =>
@@ -644,6 +648,7 @@ export interface AuthConfigResult {
   ok: boolean;
   google_client_id: string;
   has_env_login: boolean;
+  has_happycapy_login: boolean;
 }
 
 export interface AuthLoginResult {
